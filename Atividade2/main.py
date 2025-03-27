@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-
+import camelot
+import time
+import pandas as pd
 
 #Request da url e obtencao do texto parsed
 url = 'https://www.gov.br/ans/pt-br/acesso-a-informacao/participacao-da-sociedade/atualizacao-do-rol-de-procedimentos'
@@ -18,11 +20,20 @@ href = a.get('href')
 
 print("Baixando PDF")
 response = requests.get(href)
-pdf = open("Anexo I.pdf", 'wb')
-pdf.write(response.content)
-pdf.close()
+with open("Anexo I.pdf", 'wb') as pdf:
+    pdf.write(response.content)
 print("Download Finalizado")
 
-
+#Extraindo dados e convertendo para csv
+time.sleep(2)
+try:
+    tables = camelot.read_pdf("Anexo I.pdf", pages='3-end', flavor='stream', line_scale=40)
+    print("Paginas extraidas: ", tables.n)
+    tables.export("Teste_MatheusTrilhaKoch.csv", f="csv", compress=True)
+except Exception as e:
+    print(f"Erro ao processar o PDF: {str(e)}")
+finally:
+    if 'tables' in locals():
+        del tables
 
 
