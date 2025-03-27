@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import camelot
 import time
-import pandas as pd
+import tabula
 
 #Request da url e obtencao do texto parsed
 url = 'https://www.gov.br/ans/pt-br/acesso-a-informacao/participacao-da-sociedade/atualizacao-do-rol-de-procedimentos'
@@ -27,9 +27,11 @@ print("Download Finalizado")
 #Extraindo dados e convertendo para csv
 time.sleep(2)
 try:
-    tables = camelot.read_pdf("Anexo I.pdf", pages='3-end', flavor='stream', line_scale=40)
-    print("Paginas extraidas: ", tables.n)
-    tables.export("Teste_MatheusTrilhaKoch.csv", f="csv", compress=True)
+    tables = tabula.read_pdf('Anexo I.pdf', pages='3-end')
+    tabula.convert_into(tables, 'Anexo I.csv', output_format='csv', pages='all')
+    # tables = camelot.read_pdf("Anexo I.pdf", pages='3-end', flavor='stream')
+    # print("Paginas extraidas: ", tables.n)
+    # tables.export("Teste_MatheusTrilhaKoch.csv", f="csv", compress=True)
 except Exception as e:
     print(f"Erro ao processar o PDF: {str(e)}")
 finally:
