@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import camelot
 import time
 import tabula
+import pandas as pd
 
 #Request da url e obtencao do texto parsed
 url = 'https://www.gov.br/ans/pt-br/acesso-a-informacao/participacao-da-sociedade/atualizacao-do-rol-de-procedimentos'
@@ -27,15 +28,16 @@ print("Download Finalizado")
 #Extraindo dados e convertendo para csv
 time.sleep(2)
 try:
-    tables = tabula.read_pdf('Anexo I.pdf', pages='3-end')
-    tabula.convert_into(tables, 'Anexo I.csv', output_format='csv', pages='all')
-    # tables = camelot.read_pdf("Anexo I.pdf", pages='3-end', flavor='stream')
-    # print("Paginas extraidas: ", tables.n)
-    # tables.export("Teste_MatheusTrilhaKoch.csv", f="csv", compress=True)
+    tables = camelot.read_pdf('Anexo I.pdf', pages='3-181', table_areas=['0,1000,1000,0'], split_text=True, line_scale=40)
+
+    combined_df = pd.concat([table.df for table in tables])
+    combined_df = combined_df[~combined_df.apply(lambda row: row.astype(str).str.strip().eq('').all(), axis=1)]
+    combined_df = combined_df.reset_index(drop=True)
+        
+    combined_df.to_csv('Anexo I.csv', index=False, encoding='utf-8-sig', sep=';')
+        
+    print('Arquivo CSV salvo com sucesso')
 except Exception as e:
     print(f"Erro ao processar o PDF: {str(e)}")
-finally:
-    if 'tables' in locals():
-        del tables
 
 
