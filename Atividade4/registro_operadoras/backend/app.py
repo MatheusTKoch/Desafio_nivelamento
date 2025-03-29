@@ -1,9 +1,13 @@
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os.path
 
 # Localizar arquivo CSV
-df = pd.read_csv('downloads/operadoras_ativas.csv', encoding='latin-1')
+if (os.path.isfile('downloads/operadoras_ativas.csv')):
+    df = pd.read_csv('downloads/operadoras_ativas.csv', sep=';', encoding='latin-1')
+else: 
+    os.system('downloads/download.py')
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +19,7 @@ def search_operadoras():
     if not query:
         return jsonify({'error': 'No search query provided'}), 400
     
-    # Pwesquisa em colunas
+    # Pesquisa em colunas
     results = df[
         df.apply(lambda row: any(
             str(value).lower().find(query) != -1 
