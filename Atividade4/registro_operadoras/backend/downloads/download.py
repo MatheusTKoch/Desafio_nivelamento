@@ -8,7 +8,7 @@ try:
     response = requests.get(url)
     os.makedirs('downloads', exist_ok=True)
         
-    filepath = 'operadoras_ativas.csv'
+    filepath = 'downloads/operadoras_ativas.csv'
     with open(filepath, 'wb') as file:
         file.write(response.content)
         file.close()

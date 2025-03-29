@@ -35,7 +35,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in results" :key="item.Registro_ANS" class="table-row">
+            <tr v-for="item in paginatedResults" :key="item.Registro_ANS" class="table-row">
               <td>{{ item.Registro_ANS }}</td>
               <td>{{ item.Nome_Fantasia }}</td>
               <td>{{ item.CNPJ }}</td>
@@ -43,6 +43,28 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="pagination">
+        <button 
+          :disabled="currentPage === 1"
+          @click="currentPage--"
+          class="pagination-button"
+        >
+          Anterior
+        </button>
+        
+        <span class="pagination-info">
+          Página {{ currentPage }} de {{ totalPages }}
+        </span>
+        
+        <button 
+          :disabled="currentPage === totalPages"
+          @click="currentPage++"
+          class="pagination-button"
+        >
+          Próxima
+        </button>
       </div>
     </div>
 
@@ -53,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
 
 const searchQuery = ref('')
@@ -63,7 +85,20 @@ const totalResults = ref(0)
 const loading = ref(false)
 const error = ref(null)
 
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+
+const totalPages = computed(() => Math.ceil(results.value.length / itemsPerPage.value))
+
+const paginatedResults = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return results.value.slice(start, end)
+})
+
 const searchOperadoras = async () => {
+  currentPage.value = 1
+
   if (!searchQuery.value.trim()) {
     error.value = 'Por favor, digite um termo para busca'
     return
@@ -78,7 +113,6 @@ const searchOperadoras = async () => {
       params: { q: searchQuery.value }
     })
     
-    // Adiciona log para debug
     console.log('Resposta da API:', response.data)
     
     if (response.data) {
@@ -207,6 +241,40 @@ const searchOperadoras = async () => {
   background-color: #f9fafb;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.pagination-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.pagination-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
 .no-results {
   text-align: center;
   padding: 1rem;
@@ -246,6 +314,15 @@ const searchOperadoras = async () => {
   
   .search-button {
     border-radius: 0 0 0.25rem 0.25rem;
+    width: 100%;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .pagination-button {
     width: 100%;
   }
 }
