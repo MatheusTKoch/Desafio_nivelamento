@@ -21,7 +21,7 @@
     
     <div v-if="error" class="error">{{ error }}</div>
     
-    <div v-if="results.length" class="results-container">
+    <div v-if="results?.length > 0" class="results-container">
       <p class="results-count">Total de resultados: {{ totalResults }}</p>
       
       <div class="table-responsive">
@@ -45,6 +45,10 @@
         </table>
       </div>
     </div>
+
+    <div v-else-if="!loading && !error" class="no-results">
+      Nenhum resultado encontrado
+    </div>
   </div>
 </template>
 
@@ -54,12 +58,17 @@ import axios from 'axios'
 
 const searchQuery = ref('')
 const results = ref([])
+
 const totalResults = ref(0)
 const loading = ref(false)
 const error = ref(null)
 
-// Pesquisa de operadoras
 const searchOperadoras = async () => {
+  if (!searchQuery.value.trim()) {
+    error.value = 'Por favor, digite um termo para busca'
+    return
+  }
+
   results.value = []
   error.value = null
   loading.value = true
@@ -69,10 +78,28 @@ const searchOperadoras = async () => {
       params: { q: searchQuery.value }
     })
     
-    results.value = response.data.results
-    totalResults.value = response.data.total_results
+    // Adiciona log para debug
+    console.log('Resposta da API:', response.data)
+    
+    if (response.data) {
+      if (Array.isArray(response.data)) {
+        results.value = response.data
+        totalResults.value = response.data.length
+      }
+      else if (Array.isArray(response.data.results)) {
+        results.value = response.data.results
+        totalResults.value = response.data.total_results || response.data.results.length
+      }
+      else {
+        throw new Error('Formato de resposta inválido. Esperado um array ou objeto com propriedade results')
+      }
+    } else {
+      throw new Error('Nenhum dado retornado da API')
+    }
   } catch (err) {
+    console.error('Erro completo:', err)
     error.value = 'Erro ao buscar operadoras: ' + err.message
+    results.value = []
   } finally {
     loading.value = false
   }
@@ -178,6 +205,15 @@ const searchOperadoras = async () => {
 
 .table-row:hover {
   background-color: #f9fafb;
+}
+
+.no-results {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 768px) {

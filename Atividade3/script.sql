@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS demonstracoes_contabeis (
     FOREIGN KEY (registro_ans) REFERENCES operadoras(registro_ans)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- ATENCAO: Antes de rodar os comandos, adicionar a opcao 'OPT_LOCAL_INFILE=1' na aba Advanced da conexao para permitir leitura
+-- ATENCAO: Antes de rodar os comandos, adicionar a opcao 'OPT_LOCAL_INFILE=1' na aba Advanced da conexao para permitir leitura dos arquivos
 
 select * from operadoras;
 select * from demonstracoes_contabeis;
@@ -154,7 +154,7 @@ JOIN
 WHERE 
     dc.data_referencia = (SELECT MAX(data_referencia) FROM demonstracoes_contabeis) -- Último trimestre disponível
     AND (
-        dc.conta_contabil LIKE '411%' -- Contas típicas de eventos/sinistros
+        dc.conta_contabil LIKE '411%'
         OR dc.descricao LIKE '%EVENTO%MÉDICO%' 
         OR dc.descricao LIKE '%SINISTR%MÉDICO%'
         OR dc.descricao LIKE '%ASSISTÊNCIA A SAÚDE%'
@@ -178,7 +178,7 @@ JOIN
 WHERE 
     YEAR(dc.data_referencia) = 2024
     AND (
-        dc.conta_contabil LIKE '411%' -- Contas típicas de eventos/sinistros
+        dc.conta_contabil LIKE '411%'
         OR dc.descricao LIKE '%EVENTO%MÉDICO%' 
         OR dc.descricao LIKE '%SINISTR%MÉDICO%'
         OR dc.descricao LIKE '%ASSISTÊNCIA A SAÚDE%'
