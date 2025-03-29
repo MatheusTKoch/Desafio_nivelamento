@@ -4,6 +4,8 @@ import camelot
 import time
 import pandas as pd
 import re
+import zipfile
+import os
 
 # Request da url e obtenção do texto parsed
 url = 'https://www.gov.br/ans/pt-br/acesso-a-informacao/participacao-da-sociedade/atualizacao-do-rol-de-procedimentos'
@@ -110,12 +112,36 @@ try:
 
     clean_df.to_csv('Anexo I.csv', index=False, encoding='utf-8-sig', sep=';')
     
-    print(f'Arquivo CSV salvo com sucesso. Total de linhas: {len(clean_df)}')
-    print(f'Número de colunas: {len(clean_df.columns)}')
-    
     print("\nPrimeiras 5 linhas do arquivo:")
     print(clean_df.head(5))
+
+    print(f'Arquivo CSV salvo com sucesso. Total de linhas: {len(clean_df)}')
+    print(f'Número de colunas: {len(clean_df.columns)}')
+
+    #Compactando arquivo CSV
+    time.sleep(2)
+
+    zip_filename = 'Teste_MatheusTrilhaKoch.zip'
     
+    try:
+        with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for filename in os.listdir('./'):
+                if filename.endswith('.csv'):
+                    zip_file.write(filename)
+
+        for filename in os.listdir('./'):
+            if filename.endswith('.csv'):
+                try:
+                    os.remove(filename)
+                    print(f"Arquivo {filename} removido com sucesso")
+                except Exception as e:
+                    print(f"Não foi possível remover {filename}: {str(e)}")
+        
+        print(f"Arquivos compactados em {zip_filename}")
+    
+    except Exception as zip_error:
+        print(f"Erro ao compactar arquivos: {str(zip_error)}")
+
 except Exception as e:
     print(f"Erro ao processar o PDF: {str(e)}")
     import traceback
