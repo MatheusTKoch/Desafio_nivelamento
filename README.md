@@ -14,7 +14,7 @@ O projeto está organizado nas seguintes seções:
 
 ## Configuração do Ambiente
 
-Para executar as atividades 1, 2 e 3, siga as instruções abaixo:
+Para executar as atividades 1 e 2 siga as instruções abaixo:
 
 ### Ativando o Ambiente Virtual
 
