@@ -30,6 +30,25 @@ cd ..\..
 source env_nivelamento/bin/activate
 ```
 
+### Instalando Dependências
+
+Após ativar o ambiente virtual, instale as dependências necessárias:
+
+```
+pip install -r requirements.txt
+```
+
+As principais bibliotecas incluídas são:
+- requests: Para requisições HTTP
+- beautifulsoup4: Para web scraping
+- pandas: Para manipulação de dados
+- tabula-py: Para extração de tabelas de PDFs
+
+Para verificar se todas as dependências foram instaladas corretamente:
+```
+pip list
+```
+
 ## Observações
 
 - Certifique-se de seguir todas as instruções específicas para cada atividade

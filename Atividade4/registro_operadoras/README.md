@@ -34,6 +34,25 @@ flask run
 
 Por padrão, o servidor estará disponível em http://127.0.0.1:5000/
 
+### Instalando Dependências
+
+Após ativar o ambiente virtual, instale as dependências necessárias:
+
+```
+pip install -r requirements.txt
+```
+
+As principais bibliotecas incluídas são:
+- requests: Para requisições HTTP
+- beautifulsoup4: Para web scraping
+- pandas: Para manipulação de dados
+- tabula-py: Para extração de tabelas de PDFs
+
+Para verificar se todas as dependências foram instaladas corretamente:
+```
+pip list
+```
+
 ## Consultas pelo Postman
 
 ```
@@ -68,6 +87,7 @@ Por padrão, o servidor estará disponível em http://127.0.0.1:5000/
 	]
     }
 ```
+Collection no Postman: https://matheustk-3846102.postman.co/workspace/Matheus-T-Ks-Workspace~ce16fbef-f2de-47e4-8308-d9417f37ef33/collection/43587672-90aecc7a-9b5e-43cf-8c73-772c874c1f60?action=share&creator=43587672
 
 ## Observações
 
