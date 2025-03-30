@@ -121,7 +121,7 @@ try:
     #Compactando arquivo CSV
     time.sleep(2)
 
-    zip_filename = 'Teste_MatheusTrilhaKoch.zip'
+    zip_filename = 'Teste_{Matheus_Trilha_Koch}.zip'
     
     try:
         with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zip_file:
